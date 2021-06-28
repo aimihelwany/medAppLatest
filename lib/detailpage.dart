@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:medicationinfosys/operations.dart';
-import 'package:medicationinfosys/constant.dart';
-
+import 'package:medicationinfosys/constants.dart';
 
 class DetailPage extends StatefulWidget {
   final DocumentSnapshot medications;
@@ -16,81 +14,83 @@ class DetailPage extends StatefulWidget {
 class _DetailPageState extends State<DetailPage> {
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.medications.data["medicationName"]),
+        backgroundColor: kPrimaryColor,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          width: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                alignment: Alignment.topLeft,
-                height: 100,
-                width: 150,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.network(
-                    widget.medications.data["imageUrl"],
-                    fit: BoxFit.cover,
-                    alignment: Alignment.topLeft,
-                  ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(horizontal: kDefaultPadding),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(50),
+                  bottomRight: Radius.circular(50),
+                ),
+                color: kPrimaryColor,
+              ),
+              child: Center(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: kDefaultPadding),
+                      height: size.width * 0.9,
+                      child: Stack(
+                        alignment: Alignment.bottomCenter,
+                        children: <Widget>[
+                          Container(
+                            height: size.width * 0.7,
+                            width: size.width * 0.7,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          Image.network(
+                            widget.medications.data["imageUrl"],
+                            height: size.width * 0.75,
+                            width: size.width * 0.75,
+                            fit: BoxFit.cover,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Text(
+                      widget.medications.data["medicationName"],
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 30),
+                    ),
+                    Text(
+                      widget.medications.data["unit"],
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 18),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      widget.medications.data["desc"],
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 40,
+                    ),
+                  ],
                 ),
               ),
-              SizedBox(height: 15.0),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        widget.medications.data["medicationName"],
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontSize: 25),
-                      ),
-                    ],
-                  ),
-                  
-                  Row(
-                    children: <Widget>[
-                      IconButton(
-                        onPressed: () {
-                          editMedication(widget.medications.data["isFavourite"],
-                              widget.medications.data["id"]);
-                        },
-                        icon: widget.medications.data["isFavourite"]
-                            ? Icon(
-                                Icons.favorite,
-                                color: Colors.greenAccent,
-                              )
-                            : Icon(
-                                Icons.favorite_border,
-                                color: Colors.greenAccent,
-                              ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text(widget.medications.data["purpose"],
-                          style: TextStyle(color: Colors.white)),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.black,
-          ),
+            ),
+          ],
         ),
       ),
     );

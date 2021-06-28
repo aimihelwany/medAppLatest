@@ -4,35 +4,37 @@ import 'package:medicationinfosys/auth.dart';
 import 'package:provider/provider.dart';
 import 'package:medicationinfosys/user.dart';
 import 'homepage.dart';
+import 'package:medicationinfosys/dayPicker.dart';
+import 'package:medicationinfosys/notification.dart';
 
-void main(){
-  runApp(MedApp());
+void main() {
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider<SingleNotifier>(
+        create: (_) => SingleNotifier(),
+      ),
+      ChangeNotifierProvider<MultipleNotifier>(
+        create: (_) => MultipleNotifier([]),
+      )
+    ],
+    child: MedApp(),
+  ));
 }
 
-class MedApp extends StatelessWidget {
+class MedApp extends StatefulWidget {
+  @override
+  _MedAppState createState() => _MedAppState();
+}
+
+class _MedAppState extends State<MedApp> {
   @override
   Widget build(BuildContext context) {
     return StreamProvider<User>.value(
       value: AuthService().user,
-          
-          
-          child: MaterialApp(
-            debugShowCheckedModeBanner: false,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: Wrapper(),
       ),
     );
   }
 }
-
-  /*Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      initialRoute: HomePage.routeName,
-      routes: {
-        HomePage.routeName:(ctx) =>HomePage(),
-        
-      },
-    );
-  }
-}*/
-
